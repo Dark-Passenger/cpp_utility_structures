@@ -1,0 +1,52 @@
+#include <sstream>
+
+class sed
+{
+	std::stringstream buffer;
+	const std::string filename;
+
+	public:
+		sed() = delete;
+		sed(std::string _filename) : filename(_filename)
+		{
+			std::ifstream file(_filename);
+			if(file.fail())
+				throw std::runtime_error("file open failed");
+
+			buffer << file;
+			file.close();
+		}
+		
+		void remove_line(const std::string &line);
+		void remove_line(const std::string &line, std::ostream &file);
+};
+
+void sed::remove_line(const std::string &line)
+{
+	std::string bLine;
+	std::fstream file(filename);
+	if(file.fail())
+		throw std::runtime_error("file open failed");
+
+	while(std::getline(buffer, bLine))
+	{
+		if(bLine.find(line) != std::string::npos)
+			file << bLine;
+		else
+			continue;
+	}
+
+	file.close();
+}
+
+void sed::remove_line(const std::string &line, std::ostream &file)
+{
+	std::string bLine;
+	while(std::getline(buffer, bLine))
+	{
+		if(bLine.find(line) != std::string::npos)
+			file << bLine;
+		else
+			continue;
+	}
+}
