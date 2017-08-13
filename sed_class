@@ -1,3 +1,5 @@
+#include <string>
+#include <fstream>
 #include <sstream>
 
 class sed
@@ -9,11 +11,11 @@ class sed
 		sed() = delete;
 		sed(std::string _filename) : filename(_filename)
 		{
-			std::ifstream file(_filename);
+			std::ofstream file(_filename);
 			if(file.fail())
 				throw std::runtime_error("file open failed");
 
-			buffer << file;
+			buffer << file.rdbuf();
 			file.close();
 		}
 		
